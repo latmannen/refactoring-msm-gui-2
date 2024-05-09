@@ -12,24 +12,7 @@
 #
 class Actor < ApplicationRecord
   validates(:name, presence: true)
-
-  def characters
-    key = self.id
-
-    the_many = Character.where({ :actor_id => key })
-
-    return the_many
-  end
-
-  def filmography
-    the_many = Array.new
-
-    self.characters.each do |joining_record|
-      destination_record = joining_record.movie
-
-      the_many.push(destination_record)
-    end
-
-    return the_many
-  end
+  has_many(:characters)
+  has_many(:filmography, class_name: "Movie", foreign_key: "actor_id")
+  has_many(:movies, through: :characters, source: :movie)
 end
